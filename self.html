@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0d14">
+<title>Life Level-Up RPG</title>
+<style>
+:root{--bg:#080a10;--card:#111621;--card2:#151b29;--line:#252d3d;--text:#f3f6ff;--muted:#8d98ac;--accent:#8b7cff;--green:#35d49a;--gold:#ffd166;--red:#ff5f6d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#182039 0,#080a10 48%);color:var(--text);font-family:Inter,system-ui,Segoe UI,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}.wrap{max-width:1050px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.logo{font-weight:900;letter-spacing:1px;font-size:24px}.logo span{color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--card2);color:var(--text);padding:10px 14px;border-radius:11px}.btn:hover{border-color:var(--accent)}.primary{background:var(--accent);border-color:var(--accent);font-weight:800}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.card{background:linear-gradient(145deg,rgba(21,27,41,.96),rgba(12,16,25,.96));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 35px #0005}
+h1,h2,h3,p{margin-top:0}.eyebrow{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:2px}.big{font-size:42px;font-weight:900;margin:5px 0}.muted{color:var(--muted)}
+.bar{height:10px;background:#080b12;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--accent),#b6a9ff);border-radius:99px;transition:.4s}
+.xp{display:flex;justify-content:space-between;font-size:13px;margin:8px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.stat{background:#0c1019;border:1px solid var(--line);padding:14px;border-radius:14px}.stat b{display:block;font-size:24px}.stat small{color:var(--muted)}
+.quest{margin-top:16px}.quest h2{font-size:26px}.questbox{border:1px solid #343e54;background:#0c111b;border-radius:15px;padding:17px;margin:12px 0}.questtop{display:flex;justify-content:space-between;gap:10px}.tag{color:var(--gold);font-weight:800}.reward{color:var(--green);font-weight:800}.check{width:100%;padding:14px;border-radius:12px;border:0;background:var(--green);color:#06140f;font-weight:900}.check.done{background:#263345;color:#9aa7ba}
+.side{display:flex;flex-direction:column;gap:16px}.challenge{min-height:155px}.challenge strong{font-size:18px}.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini div{background:#0c1019;border:1px solid var(--line);border-radius:13px;padding:13px}.mini b{font-size:20px}.achievements{display:flex;flex-wrap:wrap;gap:8px}.badge{padding:8px 10px;border-radius:10px;background:#201e31;border:1px solid #393452;font-size:12px}.locked{opacity:.35}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.danger{color:#ff8b94}
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:20px;z-index:5}.modal.show{display:flex}.modalbox{max-width:430px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}.modal input{width:100%;padding:12px;background:#0a0e16;color:white;border:1px solid var(--line);border-radius:10px;margin:7px 0 15px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin:25px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.big{font-size:34px}.wrap{padding:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">LIFE <span>LEVEL-UP</span> RPG</div>
+  <button class="btn" onclick="openSettings()">⚙ Settings</button>
+</header>
+
+<div class="hero">
+<section class="card">
+  <div class="eyebrow">REAL LIFE • REAL XP</div>
+  <h1 id="greeting">Player</h1>
+  <div class="muted" id="identity">Building the upgraded version.</div>
+  <div class="big" id="level">LVL 1</div>
+  <div class="xp"><span id="xpText">0 / 100 XP</span><span id="coins">🪙 0</span></div>
+  <div class="bar"><div class="fill" id="xpBar"></div></div>
+  <div class="grid">
+    <div class="stat"><b id="body">1</b><small>💪 BODY</small></div>
+    <div class="stat"><b id="mind">1</b><small>🧠 MIND</small></div>
+    <div class="stat"><b id="social">1</b><small>🗣 SOCIAL</small></div>
+    <div class="stat"><b id="skill">1</b><small>💻 SKILL</small></div>
+  </div>
+</section>
+
+<div class="side">
+<section class="card">
+  <div class="eyebrow">RUN STATUS</div>
+  <div class="mini">
+    <div><b id="day">1</b><br><small>CAMPAIGN DAY</small></div>
+    <div><b id="streak">0 🔥</b><br><small>STREAK</small></div>
+    <div><b id="completed">0</b><br><small>QUESTS DONE</small></div>
+    <div><b id="rank">ROOKIE</b><br><small>RANK</small></div>
+  </div>
+</section>
+<section class="card challenge">
+  <div class="eyebrow">DAILY CHALLENGE</div>
+  <p id="challenge"></p>
+  <div class="reward">BONUS: +25 XP</div>
+</section>
+</div>
+</div>
+
+<section class="card quest">
+  <div class="eyebrow">MAIN QUEST</div>
+  <div class="questbox">
+    <div class="questtop"><span class="tag" id="questDay">DAY 1</span><span class="reward" id="questXP">+100 XP</span></div>
+    <h2 id="questTitle">Sleep</h2>
+    <p class="muted" id="questDesc"></p>
+  </div>
+  <button class="check" id="completeBtn" onclick="completeQuest()">✓ Complete Quest</button>
+  <div class="controls">
+    <button class="btn" onclick="nextDay()">Advance Day →</button>
+    <button class="btn" onclick="openSettings()">Edit Player</button>
+    <button class="btn danger" onclick="resetGame()">Reset Run</button>
+  </div>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <div class="eyebrow">ACHIEVEMENTS</div>
+  <div class="achievements" id="achievements"></div>
+</section>
+
+<footer>Your real life is the game. Don't fake the XP.</footer>
+</div>
+
+<div class="modal" id="modal">
+<div class="modalbox">
+  <div class="eyebrow">PLAYER SETUP</div>
+  <h2>Customize your run</h2>
+  <label>Player name</label><input id="nameInput" placeholder="Your name">
+  <label>Main goal</label><input id="goalInput" placeholder="e.g. Become elite">
+  <button class="btn primary" onclick="saveSettings()">Save</button>
+  <button class="btn" onclick="closeSettings()">Cancel</button>
+</div>
+</div>
+
+<script>
+const quests=[
+["Sleep","Get 8 hours of sleep. Your foundation comes before your grind.","health",100],
+["Morning Routine","Wake up, make your bed, hydrate, and get moving without scrolling.","discipline",100],
+["Clean Environment","Clean your room/workspace until it feels like a place an upgraded version of you would use.","discipline",100],
+["Whole-Food Day","Build your meals around real food and avoid mindless junk eating.","body",100],
+["Train","Complete a proper workout. Focus on quality, not ego.","body",100],
+["Kill Doomscrolling","Put a hard limit on short-form scrolling and reclaim your attention.","mind",100],
+["Weekly Review","Score your week: body, mind, social, skill, money. Pick one focus for next week.","mind",125],
+["Deep Work","Do one uninterrupted 45-minute session on something important.","skill",100],
+["Learn a Skill","Spend 30+ focused minutes learning a skill that compounds.","skill",100],
+["Read","Read for 20 minutes. No phone beside you.","mind",100],
+["Social Confidence","Start one conversation you normally would avoid.","social",100],
+["Appearance Upgrade","Do one thing that improves grooming, clothing, posture, or presentation.","body",100],
+["Digital Cleanup","Delete useless apps/files and organize your digital life.","discipline",100],
+["Weekly Review II","Review your progress and identify your biggest leak.","mind",125],
+["Journal","Write what you want, what you're avoiding, and what you'll do tomorrow.","mind",100],
+["Emotional Control","Notice one emotional trigger and respond instead of reacting.","mind",100],
+["Face a Fear","Do one small thing you've been putting off because of fear.","social",125],
+["Dopamine Reset","Spend a meaningful block of time without short-form entertainment.","mind",125],
+["Track Money","Record every rupee you spend today.","money",100],
+["Learn Money","Study one concept: cash flow, investing, debt, saving, or real estate.","money",100],
+["Weekly Review III","Review money, habits, health, social life, and skills.","mind",125],
+["Career Quest","Research or practice something connected to the career you want.","skill",100],
+["Build Something","Create something tangible instead of only consuming.","skill",125],
+["Communication","Practice speaking clearly for 10 minutes: explain an idea out loud.","social",100],
+["Sales","Learn or practice one sales/persuasion concept.","money",100],
+["Relationships","Message, call, or spend quality time with someone who matters.","social",100],
+["Adventure","Do something new. Small counts. Novelty keeps life from becoming a loop.","social",125],
+["Personal Audit","What is working? What is wasting your life? Be brutally honest.","mind",125],
+["Design Your System","Set your recurring sleep, training, study, money, and social routines.","discipline",150],
+["Identity Day","Write: 'I am the type of person who...' and define the standards you will live by.","mind",200]
+];
+
+const challenges=[
+"Do 20 minutes of focused work before entertainment.",
+"Talk to someone new.",
+"Drink water before your next meal.",
+"Put your phone away for one full hour.",
+"Do 10 minutes of stretching or mobility.",
+"Learn one useful fact and write it down.",
+"Clean one thing you've been ignoring.",
+"Do one task immediately instead of postponing it.",
+"Spend 15 minutes outside without scrolling.",
+"Give someone a genuine compliment."
+];
+
+let state=JSON.parse(localStorage.getItem("lifeRPG"))||{
+ name:"Player",goal:"Become the upgraded version of yourself.",
+ day:1,xp:0,coins:0,streak:0,completed:0,lastComplete:null,
+ stats:{body:1,mind:1,social:1,skill:1,health:1,discipline:1},
+ done:false,challengeDone:false,challengeIndex:Math.floor(Math.random()*10),badges:[]
+};
+
+function save(){localStorage.setItem("lifeRPG",JSON.stringify(state));}
+function level(){return Math.floor(state.xp/100)+1}
+function xpNeed(){return level()*100}
+function rank(){let l=level();return l>=20?"LEGEND":l>=12?"ELITE":l>=7?"VETERAN":l>=3?"GRINDER":"ROOKIE"}
+
+function render(){
+ document.getElementById("greeting").textContent=state.name;
+ document.getElementById("identity").textContent=state.goal;
+ document.getElementById("level").textContent="LVL "+level();
+ let base=(level()-1)*100, current=state.xp-base, need=xpNeed();
+ document.getElementById("xpText").textContent=current+" / "+need+" XP";
+ document.getElementById("xpBar").style.width=Math.min(100,current/need*100)+"%";
+ document.getElementById("coins").textContent="🪙 "+state.coins;
+ ["body","mind","social","skill"].forEach(k=>document.getElementById(k).textContent=state.stats[k]);
+ document.getElementById("day").textContent=state.day;
+ document.getElementById("streak").textContent=state.streak+" 🔥";
+ document.getElementById("completed").textContent=state.completed;
+ document.getElementById("rank").textContent=rank();
+
+ let q=quests[state.day-1]||quests[29];
+ document.getElementById("questDay").textContent="DAY "+state.day;
+ document.getElementById("questTitle").textContent=q[0];
+ document.getElementById("questDesc").textContent=q[1];
+ document.getElementById("questXP").textContent="+"+q[3]+" XP";
+ let b=document.getElementById("completeBtn");
+ b.textContent=state.done?"✓ Quest Completed":"✓ Complete Quest";
+ b.className="check"+(state.done?" done":"");
+ document.getElementById("challenge").textContent=challenges[state.challengeIndex]+(state.challengeDone?" ✓":"");
+ renderBadges();
+ save();
+}
+function completeQuest(){
+ if(state.done)return;
+ let q=quests[state.day-1];
+ state.xp+=q[3]; state.coins+=Math.round(q[3]/10); state.completed++;
+ let key=q[2];
+ if(state.stats[key]!==undefined)state.stats[key]+=1;
+ state.stats.discipline+=1;
+ let today=new Date().toDateString();
+ if(state.lastComplete!==today){
+   state.streak+=1; state.lastComplete=today;
+ }
+ state.done=true;
+ if(!state.badges.includes("first"))state.badges.push("first");
+ if(state.completed>=7&&!state.badges.includes("week"))state.badges.push("week");
+ if(state.completed>=30&&!state.badges.includes("campaign"))state.badges.push("campaign");
+ render();
+ alert("QUEST COMPLETE! +"+q[3]+" XP 🪙");
+}
+function nextDay(){
+ if(!state.done){alert("Complete today's main quest first.");return}
+ if(state.day<30){state.day++;state.done=false;state.challengeDone=false;state.challengeIndex=Math.floor(Math.random()*10);render()}
+ else{alert("30-DAY CAMPAIGN COMPLETE. Welcome to New Game+ — keep the system, raise the standard.");}
+}
+function renderBadges(){
+ const all=[
+ ["first","⚔️ First Quest","Complete your first quest."],
+ ["week","🔥 7 Quest Warrior","Complete 7 quests."],
+ ["campaign","👑 Campaign Legend","Complete the 30-day campaign."]
+ ];
+ document.getElementById("achievements").innerHTML=all.map(x=>`<span class="badge ${state.badges.includes(x[0])?"":"locked"}">${x[1]}</span>`).join("");
+}
+function openSettings(){document.getElementById("nameInput").value=state.name;document.getElementById("goalInput").value=state.goal;document.getElementById("modal").classList.add("show")}
+function closeSettings(){document.getElementById("modal").classList.remove("show")}
+function saveSettings(){state.name=document.getElementById("nameInput").value.trim()||"Player";state.goal=document.getElementById("goalInput").value.trim()||"Become the upgraded version of yourself.";save();closeSettings();render()}
+function resetGame(){if(confirm("Reset your entire run? This cannot be undone.")){localStorage.removeItem("lifeRPG");location.reload()}}
+render();
+</script>
+</body>
+</html>
